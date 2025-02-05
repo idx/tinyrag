@@ -11,7 +11,7 @@ Simple RAG system, powered by llama-cpp-python and sqlite-vec only.
 
 Here is the repository for you!
 
-- Siample RAG system and can DIY by yourself!
+- Simple RAG system and can DIY by yourself!
 - Using llama-cpp-python and sqlite-vec (database). Not using PyTorch or other deep learning framework.
 - Working with Linux, macOS and Windows.
 - Support Ranking, Query and LLM answer.
@@ -32,6 +32,7 @@ Resource:
 - database.py: All of database
 - embedding.py: All of embedding model
 - reranker.py: All of Reranking
+- search.py: Simple RAG system
 
 ## Demo
 
