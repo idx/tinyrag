@@ -3,7 +3,7 @@ from database import Database
 from embedding import get_embedding
 from tqdm.auto import tqdm
 
-ds = load_dataset("euirim/goodwiki",split="train").select(500) # first 500
+ds = load_dataset("euirim/goodwiki",split="train").select(range(500)) # first 500
 
 list_law=list(ds["markdown"]) # list of texts
 
