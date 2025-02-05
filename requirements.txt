@@ -1,0 +1,6 @@
+sqlite-vec>=0.1.6
+numpy>=1.26.4
+llama-cpp-python>=0.3.7
+huggingface-hub
+tqdm
+gradio>=5.15.0
