@@ -40,6 +40,8 @@ Resource:
 
 For the demo, we create Thai RAG law system.
 
+Dataset: [airesearch/WangchanX-Legal-ThaiCCL-RAG](https://huggingface.co/datasets/airesearch/WangchanX-Legal-ThaiCCL-RAG)
+
 Create the database by
 
 > python thailaw_create-db.py
@@ -53,6 +55,8 @@ Run webdemo:
 ### Goodwiki
 
 For the demo, we create English Wikipedia RAG system.
+
+Dataset: [euirim/goodwiki](https://huggingface.co/datasets/euirim/goodwiki)
 
 Create the database by (get first 500 texts from [goodwiki](https://huggingface.co/datasets/euirim/goodwiki))
 
