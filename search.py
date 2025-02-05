@@ -15,6 +15,7 @@ while True:
     list_txt_rank=get_reranker(query,list_txt) # [float, ...] that match list_txt
     list_txt=[i for i,j in zip(list_txt,list_txt_rank) if j>=0]
     str_txt='\n'.join(['- '+i.strip() for i in list_txt])
+    # RAG prompt
     temp=f"""คำถาม: {query}\nจงตอบคำถามกับกำกับมาตราที่อ้างอิงด้วยข้อมูลต่อไปนี้ ห้ามตอบนอกเหนือจากข้อมูล:\n{str_txt}"""
     llm_out=get_llm_output([{"role": "user","content": temp}])
     print(temp)
