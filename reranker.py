@@ -25,10 +25,10 @@ class Llama(local_llama):
 
 
 reranker_model = Llama.from_pretrained(
-	repo_id="puppyM/bge-reranker-v2-m3-Q4_K_M-GGUF",
-	filename="bge-reranker-v2-m3-q4_k_m.gguf",
+    repo_id="puppyM/bge-reranker-v2-m3-Q4_K_M-GGUF",
+    filename="bge-reranker-v2-m3-q4_k_m.gguf",
     verbose=False,
-    embedding=True,
+    mbedding=True,
     n_gpu_layers=-1, # Using all GPU. If you don't have gpu, use n_gpu_layers=0.
     pooling_type=llama_cpp.LLAMA_POOLING_TYPE_RANK
 )

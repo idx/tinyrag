@@ -2,8 +2,8 @@ from llama_cpp import Llama
 
 # get model
 embedding_model = Llama.from_pretrained(
-	repo_id="bbvch-ai/bge-m3-GGUF",
-	filename="bge-m3-q4_k_m.gguf",
+    repo_id="bbvch-ai/bge-m3-GGUF",
+    filename="bge-m3-q4_k_m.gguf",
     n_ctx=4096,
     embedding=True,
     verbose=False,
