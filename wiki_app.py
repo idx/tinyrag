@@ -3,6 +3,7 @@ from database import Database # for query database
 from llm import get_llm_output # get llm output
 from embedding import get_embedding # covert text to embedding
 from reranker import get_reranker # ranking embedding
+from config import LanguageConfig
 db=Database("wiki.db") # wiki.db
 
 
@@ -13,21 +14,12 @@ def search(query,history,k=5):
     list_txt_rank=get_reranker(query,list_txt) # [float, ...] that match list_txt
     list_txt=[i for i,j in zip(list_txt,list_txt_rank) if j>=0]
     if len(list_txt) == 0 :
-        return "Sorry, I can answer from Database. I don't found any docs." # Can't answer
+        return LanguageConfig.get_message("no_results_error")
     str_txt='\n'.join(['- '+i.strip() for i in list_txt])
     # RAG prompt
-    temp=f"""
-    DOCUMENT:
-{str_txt}
-
-QUESTION: {query}
-
-INSTRUCTIONS:
-Answer the users QUESTION using the DOCUMENT text above.
-Keep your answer ground in the facts of the DOCUMENT.
-If the DOCUMENT doesn’t contain the facts to answer the QUESTION return 'Sorry, I can answer from Database. I don't found any docs.'"""
+    temp = LanguageConfig.get_message("rag_prompt").format(query=query, documents=str_txt)
     history.append({"role": "user","content": temp})
-    return get_llm_output(history)["choices"][0]['message']["content"]+"\n\nDocument:\n"+str_txt
+    return get_llm_output(history)["choices"][0]['message']["content"]+"\n\nReferences:\n"+str_txt
 
 
 def respond(
