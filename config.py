@@ -4,11 +4,11 @@ Configuration for TinyRAG system
 import os
 
 class EmbeddingConfig:
-    """埋め込みモデルの設定"""
-    # 使用可能なモデルタイプ
+    """Embedding model configuration"""
+    # Available model types
     AVAILABLE_TYPES = ["llama-cpp", "sentence-transformers"]
     
-    # 各タイプで使用可能なモデル
+    # Available models for each type
     AVAILABLE_MODELS = {
         "llama-cpp": ["bge-m3"],
         "sentence-transformers": ["ruri-v3-310m", "intfloat/multilingual-e5-base", "BAAI/bge-m3"]
@@ -16,7 +16,7 @@ class EmbeddingConfig:
     
     @classmethod
     def get_model_info(cls):
-        """現在の埋め込みモデル設定を取得"""
+        """Get current embedding model configuration"""
         model_type = os.getenv("EMBEDDING_MODEL_TYPE", "sentence-transformers")
         model_name = os.getenv("EMBEDDING_MODEL_NAME", "ruri-v3-310m")
         return {
@@ -26,7 +26,7 @@ class EmbeddingConfig:
     
     @classmethod
     def set_model(cls, model_type: str, model_name: str):
-        """埋め込みモデルを設定（環境変数を設定）"""
+        """Set embedding model (set environment variables)"""
         if model_type not in cls.AVAILABLE_TYPES:
             raise ValueError(f"Invalid model type: {model_type}. Available: {cls.AVAILABLE_TYPES}")
         
@@ -64,17 +64,17 @@ If the DOCUMENT doesn't contain the facts to answer the QUESTION, return "I cann
 {documents}"""
         },
         "ja": {
-            "no_results_error": "申し訳ございません。データベースからこの質問に答えることができません。",
+            "no_results_error": "I apologize. I cannot answer this question from the database.",
             "rag_prompt": """
-ドキュメント:
+Documents:
 {documents}
 
-質問: {query}
+Question: {query}
 
-指示:
-上記のドキュメントを使用して、ユーザーの質問に答えてください。
-ドキュメントの事実に基づいて回答してください。
-ドキュメントに関連する情報がない場合は、「ドキュメントに関連する情報が見つかりません」と返してください。
+Instructions:
+Use the documents above to answer the user's question.
+Answer based on the facts in the documents.
+If there is no relevant information in the documents, return "No relevant information found in the documents."
 """
         }
     }

@@ -8,7 +8,7 @@ db=Database("wiki.db") # wiki.db
 
 
 def search(query,history,k=5):
-    # クエリ用の埋め込みを取得（sentence-transformersの場合はis_query=True）
+    # Get embedding for query (is_query=True for sentence-transformers)
     if hasattr(get_embedding, '__code__') and 'is_query' in get_embedding.__code__.co_varnames:
         query_embedding = get_embedding(query, is_query=True)["data"][0]['embedding']
     else:

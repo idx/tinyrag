@@ -9,7 +9,7 @@ list_law=list(ds["markdown"]) # list of texts
 
 # Create database
 db=Database("wiki.db") # thailaw.db
-# 埋め込みモデルの次元数を取得してデータベースを作成
+# Get embedding model dimension and create database
 embedding_dim = get_embedding_dimension()
 print(f"Creating database with embedding dimension: {embedding_dim}")
 db.create_db(embedding_dim=embedding_dim)
