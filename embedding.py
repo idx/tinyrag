@@ -34,10 +34,11 @@ elif EMBEDDING_MODEL_TYPE == "sentence-transformers":
         # Load ruri-v3-310m model
         embedding_model = SentenceTransformer("cl-nagoya/ruri-v3-310m")
         
-        # ruri-v3-310m uses different prefixes depending on the purpose
-        # Here we use search document prefixes for RAG
-        DOCUMENT_PREFIX = "検索文書: "  # Search document: 
-        QUERY_PREFIX = "検索クエリ: "     # Search query: 
+        # ruri-v3-310m requires specific Japanese prefixes for optimal performance
+        # These prefixes are part of the model design and must remain in Japanese
+        # See: https://huggingface.co/cl-nagoya/ruri-v3-310m
+        DOCUMENT_PREFIX = "検索文書: "  # Required Japanese prefix for documents
+        QUERY_PREFIX = "検索クエリ: "     # Required Japanese prefix for queries
     else:
         # Other sentence-transformers models
         embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
