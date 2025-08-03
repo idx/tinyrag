@@ -4,3 +4,5 @@ llama-cpp-python>=0.3.7
 huggingface-hub
 tqdm
 gradio>=5.15.0
+sentence-transformers>=3.0.0
+torch>=2.0.0

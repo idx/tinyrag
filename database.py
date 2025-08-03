@@ -10,11 +10,11 @@ class Database:
         sqlite_vec.load(self.db) # load sqlite-vec
         self.db.enable_load_extension(False)
 
-    def create_db(self):
-        self.db.execute("""CREATE virtual table vec_documents using vec0(
+    def create_db(self, embedding_dim=1024):
+        self.db.execute(f"""CREATE virtual table vec_documents using vec0(
                document_id INTEGER PRIMARY KEY AUTOINCREMENT,
                contents TEXT,
-               contents_embedding FLOAT[1024]
+               contents_embedding FLOAT[{embedding_dim}]
         );""") # Table vec_documents
         self.db.commit()
 

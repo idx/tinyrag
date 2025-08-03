@@ -8,7 +8,11 @@ db=Database("wiki.db") # wiki.db
 
 
 def search(query,history,k=5):
-    query_embedding = get_embedding(query)["data"][0]['embedding']
+    # クエリ用の埋め込みを取得（sentence-transformersの場合はis_query=True）
+    if hasattr(get_embedding, '__code__') and 'is_query' in get_embedding.__code__.co_varnames:
+        query_embedding = get_embedding(query, is_query=True)["data"][0]['embedding']
+    else:
+        query_embedding = get_embedding(query)["data"][0]['embedding']
     results_query = db.get_query(query_embedding,k=k)
     list_txt=[i[0] for i in results_query]
     list_txt_rank=get_reranker(query,list_txt) # [float, ...] that match list_txt
