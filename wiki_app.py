@@ -22,8 +22,10 @@ def search(query,history,k=5):
     str_txt='\n'.join(['- '+i.strip() for i in list_txt])
     # RAG prompt
     temp = LanguageConfig.get_message("rag_prompt").format(query=query, documents=str_txt)
-    history.append({"role": "user","content": temp})
-    return get_llm_output(history)["choices"][0]['message']["content"]+"\n\nReferences:\n"+str_txt
+    # Create a copy of history and add the RAG prompt
+    llm_messages = history.copy()
+    llm_messages.append({"role": "user","content": temp})
+    return get_llm_output(llm_messages)["choices"][0]['message']["content"]+"\n\nReferences:\n"+str_txt
 
 
 def respond(
@@ -39,8 +41,7 @@ def respond(
         if val[1]:
             messages.append({"role": "assistant", "content": val[1]})
 
-    messages.append({"role": "user", "content": message})
-
+    # Don't add the current message here - let search function handle it with RAG context
     yield search(message, history=messages,k=k)
 
 
