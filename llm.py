@@ -11,6 +11,32 @@ llm_model = Llama.from_pretrained(
 )
 
 
-def get_llm_output(message):
-    return llm_model.create_chat_completion(messages=message)
+def get_llm_output(message, stream=False):
+    """
+    Get LLM output from messages
+    
+    Args:
+        message: List of message dictionaries with 'role' and 'content'
+        stream: If True, returns streaming response generator
+    
+    Returns:
+        If stream=False: Complete response dictionary
+        If stream=True: Generator yielding response chunks
+    """
+    return llm_model.create_chat_completion(messages=message, stream=stream)
+
+
+def get_llm_stream(message):
+    """
+    Get streaming LLM output from messages
+    
+    Args:
+        message: List of message dictionaries with 'role' and 'content'
+        
+    Yields:
+        String chunks of the response content
+    """
+    for chunk in llm_model.create_chat_completion(messages=message, stream=True):
+        if chunk['choices'][0]['delta'].get('content'):
+            yield chunk['choices'][0]['delta']['content']
 
