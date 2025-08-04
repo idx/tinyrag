@@ -64,17 +64,17 @@ If the DOCUMENT doesn't contain the facts to answer the QUESTION, return "I cann
 {documents}"""
         },
         "ja": {
-            "no_results_error": "I apologize. I cannot answer this question from the database.",
+            "no_results_error": "申し訳ありません。データベースからこの質問にお答えできません。関連する文書が見つかりませんでした。",
             "rag_prompt": """
-Documents:
+関連文書:
 {documents}
 
-Question: {query}
+質問: {query}
 
-Instructions:
-Use the documents above to answer the user's question.
-Answer based on the facts in the documents.
-If there is no relevant information in the documents, return "No relevant information found in the documents."
+指示:
+上記の関連文書を使用してユーザーの質問に答えてください。
+文書の事実に基づいて回答してください。
+文書に質問に答えるための関連情報がない場合は、「文書に関連する情報が見つかりません。」と回答してください。
 """
         }
     }
