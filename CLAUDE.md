@@ -24,7 +24,7 @@ tinyrag/
 ├── embedding.py        # 埋め込みモデル（ruri-v3-310m/bge-m3切り替え対応）
 ├── reranker.py         # リランキングモデル（bge-reranker-v2-m3）
 ├── search.py           # RAGシステムの実装例
-├── config.py           # 言語設定と多言語対応
+├── config.py           # 言語設定、多言語対応、埋め込みモデル設定
 ├── wiki_app.py         # Wikipedia RAGデモアプリ（Gradio UI）
 ├── wiki_create-db.py   # Wikipediaデータベース作成
 ├── thailaw_app.py      # タイ法律RAGデモアプリ
@@ -41,11 +41,13 @@ tinyrag/
 - **Python**: >=3.13
 
 ### 主要ライブラリ
-- **gradio**: Web UI フレームワーク
-- **sentence-transformers**: 日本語特化埋め込みモデル対応
-- **llama-cpp-python**: GGUF形式モデル実行
-- **sqlite-vec**: ベクトル検索用SQLite拡張
+- **gradio**: Web UI フレームワーク（>=5.39.0）
+- **sentence-transformers**: 日本語特化埋め込みモデル対応（>=5.0.0）
+- **llama-cpp-python**: GGUF形式モデル実行（>=0.3.7）
+- **sqlite-vec**: ベクトル検索用SQLite拡張（>=0.1.6）
 - **datasets / huggingface-hub**: モデル・データセット管理
+- **torch**: PyTorchフレームワーク（>=2.0.0）
+- **numpy**: 数値計算ライブラリ（>=1.26.0）
 
 ### モデル
 - **LLM**: Llama-3.2-1B-Instruct (Q4_K_S量子化)
@@ -68,10 +70,15 @@ tinyrag/
 
 ### 新機能追加時の注意点
 1. **言語対応**: 新しいプロンプトは`config.py`の`LanguageConfig`に追加
-2. **埋め込みモデル**: `embedding.py`で環境変数による切り替えサポート
+   - デフォルト言語は英語（`DEFAULT_LANGUAGE = "en"`）
+   - 日本語（ja）、タイ語（th）、英語（en）対応
+2. **埋め込みモデル設定**: `config.py`の`EmbeddingConfig`クラスで管理
+   - 環境変数 `EMBEDDING_MODEL_TYPE`、`EMBEDDING_MODEL_NAME`で動的切り替え
+   - 対応モデル: sentence-transformers（ruri-v3-310m等）、llama-cpp（bge-m3）
 3. **ruri-v3-310m使用時**: 日本語プレフィックス（"検索文書: " / "検索クエリ: "）必須
 4. **データベース拡張**: `Database`クラスを継承して機能追加
 5. **依存関係**: 新しいライブラリは`pyproject.toml`に追加
+6. **会話履歴処理**: Gradio UIでのrole交互パターンを維持（user/assistant/user...）
 
 ### テスト方針
 - 各モジュール（llm.py、database.py、embedding.py、reranker.py）は独立してテスト可能
@@ -129,8 +136,27 @@ export EMBEDDING_MODEL_NAME=ruri-v3-310m
 export EMBEDDING_MODEL_TYPE=llama-cpp
 export EMBEDDING_MODEL_NAME=bge-m3
 
+# その他のsentence-transformers対応モデル
+export EMBEDDING_MODEL_TYPE=sentence-transformers
+export EMBEDDING_MODEL_NAME=intfloat/multilingual-e5-base
+# または
+export EMBEDDING_MODEL_NAME=BAAI/bge-m3
+
 # 一時的な設定でアプリ起動
 EMBEDDING_MODEL_TYPE=llama-cpp EMBEDDING_MODEL_NAME=bge-m3 python wiki_app.py
+```
+
+### 設定管理（config.py）
+
+```python
+# 埋め込みモデル情報を取得
+from config import EmbeddingConfig
+model_info = EmbeddingConfig.get_model_info()
+print(f"Type: {model_info['type']}, Name: {model_info['name']}")
+
+# 言語設定を変更
+from config import LanguageConfig
+LanguageConfig.set_default_language("ja")  # 日本語に変更
 ```
 
 ### 重要な注意点
@@ -155,6 +181,9 @@ EMBEDDING_MODEL_TYPE=llama-cpp EMBEDDING_MODEL_NAME=bge-m3 python wiki_app.py
 - **モデル選択**: 環境変数`EMBEDDING_MODEL_TYPE`、`EMBEDDING_MODEL_NAME`で確認
 - **ruri-v3-310m問題**: 日本語プレフィックスが正しく付加されているか確認
 - **uvエラー**: `uv sync`で依存関係を再同期
+- **Gradio会話エラー**: 「Conversation roles must alternate」エラーは`wiki_app.py`のrole順序問題
+- **言語設定**: `LanguageConfig.DEFAULT_LANGUAGE`でデフォルト言語を確認
+- **設定クラス**: `EmbeddingConfig.get_model_info()`で現在のモデル設定を確認
 
 ## 📝 TODO/改善案
 
@@ -166,3 +195,15 @@ EMBEDDING_MODEL_TYPE=llama-cpp EMBEDDING_MODEL_NAME=bge-m3 python wiki_app.py
 - [ ] 他のsentence-transformersモデル対応拡張
 - [ ] テストスイートの実装
 - [ ] CI/CD パイプラインの構築
+- [ ] 設定ファイル（YAML/JSON）による設定管理
+- [ ] APIエンドポイントの実装（FastAPI等）
+- [ ] ベクトルデータベースの永続化最適化
+
+## 🔧 最新の変更履歴
+
+### 2024年12月 主要更新
+- ✅ `EmbeddingConfig`クラス追加: 埋め込みモデルの動的切り替え対応
+- ✅ `LanguageConfig`の日本語対応強化: 適切な日本語プロンプト・エラーメッセージ
+- ✅ Gradio UIの会話履歴処理改善: role交互パターンエラー修正
+- ✅ 依存関係更新: pyproject.toml準拠、最新バージョン対応
+- ✅ 多言語プロンプトテンプレート充実: 英語・日本語・タイ語対応
